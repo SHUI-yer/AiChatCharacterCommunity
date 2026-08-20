@@ -1,0 +1,65 @@
+{
+    "character_name": "河原木桃香（Kawaragi Momoka）",
+    "moments": [
+        {
+            "id": "m1",
+            "content": "新写的曲子，感觉还差点什么……又要熬夜了。",
+            "images": [
+                "files/01.webp"
+            ],
+            "likes": [
+                "井芹仁菜",
+                "鲁帕"
+            ],
+            "comments": [
+                {
+                    "sender": "井芹仁菜",
+                    "content": "桃香小姐不要太勉强自己！不管是什么曲子我都会全力唱好的！"
+                },
+                {
+                    "sender": "海老冢智",
+                    "content": "注意身体，别拖累了乐队的进度。"
+                }
+            ],
+            "created_at": "2026-08-19T09:24:22.064Z"
+        },
+        {
+            "id": "m2",
+            "content": "今天喝啤酒。偶尔也需要放松一下。",
+            "images": [
+                "files/02.webp"
+            ],
+            "likes": [
+                "鲁帕",
+                "安和昴"
+            ],
+            "comments": [
+                {
+                    "sender": "安和昴",
+                    "content": "桃香小姐，又喝酒！"
+                }
+            ],
+            "created_at": "2026-08-19T23:17:42.064Z"
+        },
+        {
+            "id": "m3",
+            "content": "看到那家伙拼命的样子，就觉得不能放弃呢。",
+            "images": [
+                "files/03.webp"
+            ],
+            "likes": [
+                "井芹仁菜",
+                "安和昴",
+                "海老冢智",
+                "鲁帕"
+            ],
+            "comments": [
+                {
+                    "sender": "井芹仁菜",
+                    "content": "桃香小姐说的是我吗？！"
+                }
+            ],
+            "created_at": "2026-08-20T09:01:02.064Z"
+        }
+    ]
+}
