@@ -92,13 +92,15 @@ jobs:
           for char_dir in "${CHAR_DIRS[@]}"; do
             if [ -d "$char_dir" ]; then
               char_name=$(basename "$char_dir")
-              zip_filename=$(python3 .github/scripts/to_camel.py "$char_name")
-              zip_path="release_packages/$zip_filename.zip"
-              echo "$char_name" > "name_mapping/$zip_filename.txt"
+              # Use Chinese name directly as the zip filename (UTF-8 supported)
+              zip_path="release_packages/$char_name.zip"
+              # Store ASCII mapping for reference (keyed by ascii name)
+              ascii_name=$(python3 .github/scripts/to_camel.py "$char_name")
+              echo "$ascii_name" > "name_mapping/$ascii_name.txt"
               cd "$(dirname "$char_dir")"
               zip -r "../../$zip_path" "$char_name/"
               cd - > /dev/null
-              echo "Created single pack: $zip_filename.zip"
+              echo "Created single pack: $char_name.zip"
             fi
           done
 
@@ -169,7 +171,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Create release V1.0.0
-        id: create_release
+        id: create_release_game
         uses: softprops/action-gh-release@v2
         with:
           tag_name: V1.0.0
@@ -180,28 +182,6 @@ jobs:
           prerelease: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Rename release assets to Chinese
-        run: |
-          RELEASE_ID=${{ steps.create_release.outputs.id }}
-          for zip_file in release_packages/*.zip; do
-            if [ -f "$zip_file" ]; then
-              ascii_name=$(basename "$zip_file" .zip)
-              if [ -f "name_mapping/$ascii_name.txt" ]; then
-                chinese_name=$(cat "name_mapping/$ascii_name.txt")
-                if [ -n "$chinese_name" ] && [ "$chinese_name" != "$ascii_name" ]; then
-                  echo "Renaming: $ascii_name.zip -> $chinese_name.zip"
-                  ASSET_ID=$(gh api "repos/${{ github.repository }}/releases/$RELEASE_ID/assets" --jq ".[] | select(.name == \"$ascii_name.zip\") | .id")
-                  if [ -n "$ASSET_ID" ]; then
-                    gh api "repos/${{ github.repository }}/releases/assets/$ASSET_ID" -X PATCH -f name="$chinese_name.zip" -f label="$chinese_name"
-                    echo "✓ Renamed: $chinese_name.zip"
-                  fi
-                fi
-              fi
-            fi
-          done
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   release-single:
     name: 发布角色分类 Release（V1.1.0）
@@ -261,7 +241,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Create release V1.1.0
-        id: create_release
+        id: create_release_single
         uses: softprops/action-gh-release@v2
         with:
           tag_name: V1.1.0
@@ -272,25 +252,3 @@ jobs:
           prerelease: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Rename release assets to Chinese
-        run: |
-          RELEASE_ID=${{ steps.create_release.outputs.id }}
-          for zip_file in release_packages/*.zip; do
-            if [ -f "$zip_file" ]; then
-              ascii_name=$(basename "$zip_file" .zip)
-              if [ -f "name_mapping/$ascii_name.txt" ]; then
-                chinese_name=$(cat "name_mapping/$ascii_name.txt")
-                if [ -n "$chinese_name" ] && [ "$chinese_name" != "$ascii_name" ]; then
-                  echo "Renaming: $ascii_name.zip -> $chinese_name.zip"
-                  ASSET_ID=$(gh api "repos/${{ github.repository }}/releases/$RELEASE_ID/assets" --jq ".[] | select(.name == \"$ascii_name.zip\") | .id")
-                  if [ -n "$ASSET_ID" ]; then
-                    gh api "repos/${{ github.repository }}/releases/assets/$ASSET_ID" -X PATCH -f name="$chinese_name.zip" -f label="$chinese_name"
-                    echo "✓ Renamed: $chinese_name.zip"
-                  fi
-                fi
-              fi
-            fi
-          done
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
